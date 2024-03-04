@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat-Application/Chats</title>
+    <link rel="stylesheet" href="/styles/chats.css" />
+  </head>
+  <style>
+    .right-align {
+      color: wheat;
+      float: right;
+      clear: both;
+      list-style: none;
+      font-size: 20px;
+
+      margin: 0.3rem;
+    }
+    .left-align {
+      color: wheat;
+      float: left;
+      clear: both;
+      list-style: none;
+      font-size: 20px;
+
+      margin: 0.3rem;
+    }
+    #name {
+      color: brown;
+    }
+    .userlistclass {
+      clear: both;
+      list-style: none;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .userlistclass::before {
+      content: "➤";
+      /* margin-bottom: 2rem; */
+      margin-right: 8px;
+    }
+  </style>
+  <body>
+    <header>
+      <div class="logo">
+        <img src="/images/ChatLogo.png" alt="D Typing" />
+        <span id="AppName">Lets Chat</span>
+      </div>
+      <nav>
+        <!-- <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#About-Us">About</a></li>
+                <li><a href="#Services">Services</a></li>
+                <li><a href="#Contact-Us">Contact</a></li>
+                <li><a href="#">Explore</a></li>
+            </ul> -->
+        <div>
+          <form action="/auth/logout" method="post">
+            <input type="hidden" name="username" value="<%= username %>" />
+            <button class="signbtn" id="loginbtn">Logout</button>
+          </form>
+        </div>
+      </nav>
+    </header>
+    <!-- ------------------------------------------------------  -->
+    <div class="container">
+      <div class="nameListArea">
+        <div>
+          <h1
+            id="username"
+            style="margin: 10%; font-family: Georgia; color: #fd5e53"
+          >
+            <%= username %>
+          </h1>
+        </div>
+        <hr />
+        <div style="height: 12rem">
+          <h2 style="margin: 5% 0 0 10%; font-family: Georgia">
+            Connected Users
+          </h2>
+          <div style="overflow-y: auto; height: 10rem">
+            <ul
+              id="userlist"
+              style="margin: 5% 0 0 10%; font-family: Georgia"
+            ></ul>
+          </div>
+        </div>
+        <hr />
+        <div>
+          <h2 style="margin: 5% 0 0 10%; font-family: Georgia">All Users</h2>
+          <div style="overflow-y: auto; height: 12rem">
+            <ul
+              id="alluserlist"
+              style="margin: 5% 0 0 10%; font-family: Georgia"
+            ></ul>
+          </div>
+        </div>
+      </div>
+      <div class="typingArea">
+        <div style="display: flex; justify-content: center">
+          <h1 onclick="pageIncrement()" style="cursor: pointer; color: white">
+            <<-
+          </h1>
+          <h1 id="pageNumber" style="color: white">1</h1>
+          <h1 onclick="pageDecrement()" style="cursor: pointer; color: white">
+            >>
+          </h1>
+        </div>
+        <hr />
+        <div class="meassageArea" id="messageBody">
+          <ul id="messageList"></ul>
+        </div>
+        <div class="inp-container">
+          <form action="/msgsend" method="post">
+            <input type="hidden" name="username" value="<%= username %>" />
+            <input id="inputArea" type="text" name="newmsg" />
+            <button id="sendbtn" type="submit">Send</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- -----------------------------------------------  -->
+    <script>
+      // --------------- Pagination -----------------
+      let pageNumber = 1; // Initialize pageNumber variable
+
+      const updatePageNumber = () => {
+        document.getElementById("pageNumber").textContent = pageNumber;
+      };
+
+      const pageDecrement = () => {
+        if (pageNumber > 1) {
+          pageNumber--;
+          updatePageNumber(); // Update the displayed page number
+        }
+      };
+
+      const pageIncrement = () => {
+        if (pageNumber < totalPages) {
+          pageNumber++;
+          updatePageNumber(); // Update the displayed page number
+        }
+      };
+
+      const pageSize = 50; // Adjust the page size as needed
+      let totalPages = 10;
+
+      // ------------------ Message ----------------------
+      const username = document.getElementById("username").innerText;
+      const messageBody = document.getElementById("messageBody");
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const messageList = document.getElementById("messageList");
+
+        let msgHistory = [];
+        let extraMsg = [];
+        let flag = true;
+        function fetchMessages() {
+          fetch("/polling")
+            .then((response) => response.json())
+            .then((newmsgHistory) => {
+              totalPages = Math.ceil(newmsgHistory.length / pageSize);
+
+              if (pageNumber == 1) {
+                let isFirstUpdate = true;
+                // updateUI(newMsg(newmsgHistory, msgHistory));
+                if (isFirstUpdate) {
+                  if (flag) {
+                    updateUI(getMessagesForPage(pageNumber, newmsgHistory));
+                    flag = false;
+                  } else {
+                    updateUI(newMsg(newmsgHistory, msgHistory));
+                    isFirstUpdate = false; // Set the flag to false after the first update
+                  }
+                } else {
+                  updateUI(getMessagesForPage(pageNumber, newmsgHistory));
+                }
+              } else {
+                updateUI(getMessagesForPage(pageNumber, newmsgHistory));
+                flag = true;
+              }
+              msgHistory = newmsgHistory;
+            })
+            .catch((error) => {
+              console.error("Error fetching new messages:", error);
+            });
+        }
+
+        // function for getting new message sent
+        function newMsg(newmsgHistory, msgHistory) {
+          console.log(newmsgHistory);
+          extraMsg = newmsgHistory.slice(msgHistory.length);
+          return extraMsg;
+        }
+        // ------------------------------------------------
+
+        // function for getting message page wise
+        function getMessagesForPage(pageNumber, newmsgHistory) {
+          const totalMessages = newmsgHistory.length;
+
+          // For page number 1, get the last 10 elements
+          if (pageNumber === 1) {
+            const startIndex = Math.max(0, totalMessages - pageSize);
+            const endIndex = totalMessages;
+            return newmsgHistory.slice(startIndex, endIndex);
+          } else {
+            const startIndex = Math.max(0, totalMessages - pageNumber * pageSize);
+            const endIndex = Math.min(totalMessages - (pageNumber - 1) * pageSize, totalMessages);
+
+            return newmsgHistory.slice(startIndex, endIndex);
+          }
+        }
+
+        // // Example: Display messages for page 1
+        // const pageNumber = 1;
+        // const messagesForPage = getMessagesForPage(pageNumber);
+        // ------------------------------------------------
+
+        let first = false;
+        // function for displaying messages in ui
+        function updateUI(messages) {
+          if (pageNumber != 1) {
+            messageList.innerHTML = "";
+            first = true;
+          } else {
+            if (first) {
+              messageList.innerHTML = "";
+              first = false;
+            }
+          }
+
+          messages.forEach((message) => {
+            const li = document.createElement("li");
+            console.log("msgname",message.name);
+            console.log(username);
+            if (message.name == username) {
+              li.textContent = `you : ${message.message}`;
+              li.classList.add("right-align");
+            } else {
+              li.textContent = `${message.name} : ${message.message}`;
+              li.classList.add("left-align");
+            }
+            messageList.append(li);
+            messageBody.scrollTop = messageBody.scrollHeight;
+          });
+        }
+
+        setInterval(fetchMessages, 2000);
+
+        fetchMessages();
+      });
+      // -----------------------------------------------------------
+
+      // ----------------------- Connected User ----------------------
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const userlist = document.getElementById("userlist");
+
+        function fetchUser() {
+          fetch("/showUsers")
+            .then((response) => response.json())
+            .then((data) => {
+              // console.log(data)
+              const newlist = [...new Set(data)];
+              updateUserList(newlist);
+            })
+            .catch((error) => {
+              console.error("Error fetching user list:", error);
+            });
+        }
+
+        // function for displaying connected userlist
+        function updateUserList(users) {
+          userlist.innerHTML = "";
+
+          users.forEach((user) => {
+            const li = document.createElement("li");
+            if (user == username) {
+              li.textContent = "you";
+            } else {
+              li.textContent = `${user}`;
+            }
+            li.classList.add("userlistclass");
+            userlist.append(li);
+          });
+        }
+
+        setInterval(fetchUser, 2000);
+
+        fetchUser();
+      });
+
+      // --------------------------------------------------------------
+
+      // ----------------------- All User ----------------------------------------------
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const alluserlist = document.getElementById("alluserlist");
+
+        function fetchAllUser() {
+          fetch("/showAllUsers")
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("mmmmmmm", data);
+              updateAllUserList(data);
+            })
+            .catch((error) => {
+              console.error("Error fetching user list:", error);
+            });
+        }
+
+        // function for displaying all users
+        function updateAllUserList(users) {
+          alluserlist.innerHTML = "";
+
+          users.forEach((user) => {
+            const li = document.createElement("li");
+            if (user == username) {
+              li.textContent = "you";
+            } else {
+              li.textContent = `${user}`;
+              li.addEventListener("click", () => {
+                redirectToOneChat(user);
+              });
+            }
+            li.classList.add("userlistclass");
+            alluserlist.append(li);
+          });
+        }
+
+        function redirectToOneChat(user) {
+          const chatUrl = `/oneChat?user=${encodeURIComponent(
+            user
+          )}&username=${encodeURIComponent(username)}`;
+          window.location.href = chatUrl;
+        }
+
+        fetchAllUser();
+      });
+    </script>
+  </body>
+</html>
