@@ -29,9 +29,13 @@ module.exports = {
 
     try {
       let existingUser = await User.findOne({ email: email });
+      let existingUser1 = await User.findOne({ name: name });
 
       if (existingUser) {
         return res.badRequest("Email already exists");
+      }
+      if (existingUser1) {
+        return res.badRequest("Username already exists");
       }
 
       let user = await User.create({
