@@ -9,6 +9,16 @@ const axios = require('axios');
 
 let msgHistory = [];
 
+/**
+ * @name sendMessage
+ * @file MessageController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws NotAuthorizedException
+ * @description This method will handle send message to the database.
+ * @author Deepak (Zignuts)
+ * */
+// method for handling sending messages
 sendMessage = async function (username, message) {
     console.log("sendMsgMid => ",username, message);
 
@@ -22,6 +32,16 @@ sendMessage = async function (username, message) {
     }
 };
 
+/**
+ * @name pollServer
+ * @file MessageController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws NotAuthorizedException
+ * @description This method will handle poll messages to the database.
+ * @author Deepak (Zignuts)
+ * */
+// method for handling polling messages
 pollServer = async () => {
     try {
         console.log('polling');
@@ -34,6 +54,16 @@ pollServer = async () => {
 }
 
 module.exports = {
+
+    /**
+ * @name getMsgAPI
+ * @file MessageController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws NotAuthorizedException
+ * @description This action will get all messages from the database.
+ * @author Deepak (Zignuts)
+ * */
     getMsgAPI: async function (req, res) {
         console.log('getMsgAction');
         try {
@@ -50,6 +80,16 @@ module.exports = {
           res.status(500).send("Internal Server Error");
         }
     },
+
+    /**
+ * @name sendMsgAPI
+ * @file MessageController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws NotAuthorizedException
+ * @description This action will send a message to the database.
+ * @author Deepak (Zignuts)
+ * */
 
     sendMsgAPI: async function (req, res) {
         // const {username, message} = req.body;
@@ -80,6 +120,16 @@ module.exports = {
         }
     },
 
+    /**
+ * @name msgSendAction
+ * @file MessageController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws NotAuthorizedException
+ * @description This action will handle message send request from client side.
+ * @author Deepak (Zignuts)
+ * */
+
     msgSendAction: async function (req, res) {
         const username = req.body.username;
         const message = req.body.newmsg;
@@ -87,7 +137,16 @@ module.exports = {
         const data = await sendMessage(username, message);
         return res.redirect('/chats');
     },
-    
+
+    /**
+ * @name pollingAction
+ * @file MessageController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws NotAuthorizedException
+ * @description This action will handle polling request from client side.
+ * @author Deepak (Zignuts)
+ * */
     
     pollingAction: async function (req, res) {
         const data = await pollServer();

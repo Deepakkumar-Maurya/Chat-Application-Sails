@@ -11,6 +11,16 @@ const dotenv = require('dotenv').config();
 
 
 module.exports = {
+
+  /**
+ * @name signupAction
+ * @file UserController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws NotAuthorizedException
+ * @description This action will handle signup request from client side.
+ * @author Deepak (Zignuts)
+ * */
   signupAction: async function (req, res) {
     let name = req.body.name;
     let email = req.body.email;
@@ -37,6 +47,16 @@ module.exports = {
       return res.serverError(error).redirect('/signup');
     }
   },
+
+  /**
+ * @name loginAction
+ * @file UserController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws NotAuthorizedException
+ * @description This action will handle login request from client side.
+ * @author Deepak (Zignuts)
+ * */
 
   loginAction: async function (req, res) {
     let email = req.body.email;
@@ -83,6 +103,16 @@ module.exports = {
   
   },
 
+  /**
+ * @name logoutAction
+ * @file UserController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws NotAuthorizedException
+ * @description This action will handle logout request from client side.
+ * @author Deepak (Zignuts)
+ * */
+
   logoutAction: async function (req, res) {
     try {
       const name = req.body.username;
@@ -104,6 +134,16 @@ module.exports = {
 
   },
 
+  /**
+ * @name getAllUsers
+ * @file UserController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws NotAuthorizedException
+ * @description This method will get all the users.
+ * @author Deepak (Zignuts)
+ * */
+
   getAllUsers: async function (req, res) {
     console.log('showAllUsers');
     try {
@@ -116,6 +156,16 @@ module.exports = {
       return res.serverError("Error fetching users");
     }
   },
+
+  /**
+ * @name getAllCurrentUsers
+ * @file UserController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws NotAuthorizedException
+ * @description This method will get all current logged in users.
+ * @author Deepak (Zignuts)
+ * */
 
   getAllCurrentUsers: async function (req, res) {
     try {

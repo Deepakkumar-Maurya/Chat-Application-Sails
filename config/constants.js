@@ -10,12 +10,6 @@ const ResponseCode = {
     FORCE_LOGOUT: 303,
 };
 
-const registerRoutes = [
-    '/login',
-    '/signup'
-]
-
 module.exports.constants = {
     ResponseCode,
-    registerRoutes
 };

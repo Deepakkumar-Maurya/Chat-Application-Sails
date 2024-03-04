@@ -1,5 +1,15 @@
 module.exports = {
 
+  /**
+ * @name homePage
+ * @file IndexController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws 404 error
+ * @description This action will render home page.
+ * @author Deepak (Zignuts)
+ * */
+
   homePage: async function (req, res) {
     try {
       res.view('pages/home');
@@ -7,6 +17,16 @@ module.exports = {
       console.log(error.message);
     }
   },
+
+  /**
+ * @name signupPage
+ * @file IndexController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws 404 error
+ * @description This action will render signup page.
+ * @author Deepak (Zignuts)
+ * */
 
   signupPage: async function (req, res) {
     try {
@@ -16,6 +36,16 @@ module.exports = {
     }
   },
 
+  /**
+ * @name loginPage
+ * @file IndexController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws 404 error
+ * @description This action will render login page.
+ * @author Deepak (Zignuts)
+ * */
+
   loginPage: async function (req, res) {
     try {
       res.view('pages/login');
@@ -23,6 +53,16 @@ module.exports = {
       console.log(error.message);
     }
   },
+
+  /**
+ * @name chatsPage
+ * @file IndexController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws 404 error
+ * @description This action will render chats page.
+ * @author Deepak (Zignuts)
+ * */
 
   chatsPage: async function (req, res) {
     try {
@@ -32,6 +72,16 @@ module.exports = {
       console.log(error.message);
     }
   },
+
+  /**
+ * @name oneChatPage
+ * @file IndexController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws 404 error
+ * @description This action will render oneChat page.
+ * @author Deepak (Zignuts)
+ * */
 
   oneChatPage: async function (req, res) {
     try {

@@ -7,8 +7,17 @@
 
 const axios = require("axios");
 
-let OneChatMsgHistory = [];
+/**
+ * @name oneChatSendMsgMid
+ * @file OneChatMessageController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws NotAuthorizedException
+ * @description This action will handle send message to the database.
+ * @author Deepak (Zignuts)
+ * */
 
+let OneChatMsgHistory = [];
 oneChatSendMsgMid = async function (username, userfriend, message) {
     console.log("middleware for sending message");
     console.log("sendMsgMid => ",username, userfriend, message);
@@ -26,6 +35,16 @@ oneChatSendMsgMid = async function (username, userfriend, message) {
     }
 };
 
+/**
+ * @name OneChatPollServer
+ * @file OneChatMessageController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws NotAuthorizedException
+ * @description This action will handle poll messages to the database.
+ * @author Deepak (Zignuts)
+ * */
+
 OneChatPollServer = async (data) => {
     try {
       const response = await axios.post(
@@ -40,6 +59,17 @@ OneChatPollServer = async (data) => {
 };
 
 module.exports = {
+
+  /**
+ * @name oneChatGetMsgAPI
+ * @file OneChatMessageController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws NotAuthorizedException
+ * @description This action will get all messages from the database.
+ * @author Deepak (Zignuts)
+ * */
+
     oneChatGetMsgAPI: async function (req, res) {
         // console.log(req.body);
         let userscred = req.body.data;
@@ -69,6 +99,16 @@ module.exports = {
             res.status(500).json({ error: "Internal Server Error" });
         }
       },
+
+      /**
+ * @name oneChatSendMsgAPI
+ * @file OneChatMessageController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws NotAuthorizedException
+ * @description This action will send a message to the database.
+ * @author Deepak (Zignuts)
+ * */
     
       oneChatSendMsgAPI: async function (req, res) {
         const sendername = req.body.username;
@@ -101,6 +141,16 @@ module.exports = {
         }
       },
 
+      /**
+ * @name oneChatMsgSendButtonAction
+ * @file OneChatMessageController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws NotAuthorizedException
+ * @description This action will handle send message to the database.
+ * @author Deepak (Zignuts)
+ * */
+
       oneChatMsgSendButtonAction: async function (req, res) {
         const username = req.body.username;
         const message = req.body.newmsg;
@@ -112,6 +162,16 @@ module.exports = {
         console.log("data is ", data);
         return res.redirect(`/oneChat?user=${encodeURIComponent(userfriend)}&username=${encodeURIComponent(username)}`);
       },
+
+      /**
+ * @name oneChatPollingAction
+ * @file OneChatMessageController.js
+ * @param {Request} req
+ * @param {Response} res
+ * @throws NotAuthorizedException
+ * @description This action will handle poll messages to the database.
+ * @author Deepak (Zignuts)
+ * */
     
       oneChatPollingAction: async function (req, res) {
         try {
