@@ -51,4 +51,4 @@ try {
 
 
 // Start server
-sails.lift(rc('sails'));
+module.exports = sails.lift(rc('sails'));
