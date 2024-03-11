@@ -66,7 +66,9 @@ module.exports = {
 
   chatsPage: async function (req, res) {
     try {
-      let username = req.session.username;
+      // let username = req.session.username;
+      let username = req.query.username;
+      console.log(username,'ssssssss');
       res.view('pages/chats', { username });
     } catch (error) {
       console.log(error.message);
@@ -94,8 +96,8 @@ module.exports = {
       // Render the 'oneChat' view and pass the user parameter
       return res.view('pages/oneChat', { username, userfriend, userfriendDetails });
     } catch (err) {
-      console.error("Error in oneChatAction:", err);
-      return res.serverError("Internal Server Error");
+      console.error('Error in oneChatAction:', err);
+      return res.serverError('Internal Server Error');
     }
   }
 

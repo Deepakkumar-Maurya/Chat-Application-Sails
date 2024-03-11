@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 chai.use(chaiHttp);
 
 describe('userController test', () => {
+  // User Signup test cases
   describe('user signup => POST /auth/signup', () => {
     it('should create a new user and redirect to /login', async () => {
       const newUser = {
@@ -37,6 +38,7 @@ describe('userController test', () => {
     });
   });
 
+  // user login test cases
   describe('user login => POST /auth/login', () => {
     it('should login user and redirect to /chats', async () => {
       const user = {
@@ -64,7 +66,7 @@ describe('userController test', () => {
     });
   });
 
-  // reconsider it
+  // user logout test cases
   describe('user logout => POST /auth/logout', () => {
     it('should logout user and redirect to /home', async () => {
       const user = {
@@ -77,9 +79,12 @@ describe('userController test', () => {
                     .send(user);
       expect(res.statusCode).to.equal(200);
       expect(res).to.be.html;
+      console.log(res.text);
     });
   });
 
+
+  // user showAllUsers test cases
   describe('GET /showAllUsers', () => {
     it('should get a list of all users', async () => {
       const res = await chai
@@ -91,6 +96,7 @@ describe('userController test', () => {
     });
   });
 
+  // user showAllCurrentUsers test cases
   describe('GET /showAllCurrentUsers', () => {
     it('should get a list of all current users', async () => {
       const res = await chai
@@ -102,6 +108,7 @@ describe('userController test', () => {
     });
   });
 
+  // destroy test data
   after((done) => {
     User.destroy({
       email: ['test@example.com'],

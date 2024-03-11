@@ -1,8 +1,9 @@
 var sails = require('sails');
 
+// before function to execute before all tests
 before((done) => {
-  // this.timeout(5000);
 
+  // Lift sails application
   sails.lift({
 
     hooks: { grunt: false },
@@ -14,6 +15,7 @@ before((done) => {
   });
 });
 
+// after function to execute after all tests
 after((done) => {
   sails.lower(done);
 });

@@ -27,23 +27,23 @@ module.exports.routes = {
   'GET /chats' : 'IndexController.chatsPage',
   'GET /oneChat' : 'IndexController.oneChatPage',
 
-  "POST /auth/signup": "UserController.signupAction",
-  "POST /auth/login": "UserController.loginAction",
-  "POST /auth/logout": "UserController.logoutAction",
+  'POST /auth/signup': 'UserController.signupAction',
+  'POST /auth/login': 'UserController.loginAction',
+  'POST /auth/logout': 'UserController.logoutAction',
 
-  "GET /api/messages/getMsg": "MessageController.getMsgAPI",
-  "POST /api/messages/sendMsg": "MessageController.sendMsgAPI",
-  "POST /api/messages/oneChatSendMsg": "OneChatMessageController.oneChatSendMsgAPI",
-  "POST /api/messages/oneChatGetMsg": "OneChatMessageController.oneChatGetMsgAPI",
+  'GET /api/messages/getMsg': 'MessageController.getMsgAPI',
+  'POST /api/messages/sendMsg': 'MessageController.sendMsgAPI',
+  'POST /api/messages/oneChatSendMsg': 'OneChatMessageController.oneChatSendMsgAPI',
+  'POST /api/messages/oneChatGetMsg': 'OneChatMessageController.oneChatGetMsgAPI',
 
-  "POST /msgsend": "MessageController.msgSendAction",
-  "POST /oneChatMsgSend": "OneChatMessageController.oneChatMsgSendButtonAction",
+  'POST /msgsend': 'MessageController.msgSendAction',
+  'POST /oneChatMsgSend': 'OneChatMessageController.oneChatMsgSendButtonAction',
 
-  "GET /showUsers": "UserController.getAllCurrentUsers",
-  "GET /showAllUsers": "UserController.getAllUsers",
+  'GET /showUsers': 'UserController.getAllCurrentUsers',
+  'GET /showAllUsers': 'UserController.getAllUsers',
 
-  "GET /polling": "MessageController.pollingAction",
-  "POST /oneChatPolling": "OneChatMessageController.oneChatPollingAction",
+  'GET /polling': 'MessageController.pollingAction',
+  'POST /oneChatPolling': 'OneChatMessageController.oneChatPollingAction',
 
 
   /***************************************************************************
