@@ -12,9 +12,13 @@ module.exports = {
 
   homePage: async function (req, res) {
     try {
-      res.view('pages/home');
+      return res.view('pages/home');
     } catch (error) {
       console.log(error.message);
+      return res.status(404).json({
+        error: error.message,
+        message: 'Page not found',
+      });
     }
   },
 
@@ -30,9 +34,13 @@ module.exports = {
 
   signupPage: async function (req, res) {
     try {
-      res.view('pages/signup');
+      return res.view('pages/signup');
     } catch (error) {
       console.log(error.message);
+      return res.status(404).json({
+        error: error.message,
+        message: 'Page not found',
+      });
     }
   },
 
@@ -48,9 +56,13 @@ module.exports = {
 
   loginPage: async function (req, res) {
     try {
-      res.view('pages/login');
+      return res.view('pages/login');
     } catch (error) {
       console.log(error.message);
+      return res.status(404).json({
+        error: error.message,
+        message: 'Page not found',
+      });
     }
   },
 
@@ -69,9 +81,13 @@ module.exports = {
       // let username = req.session.username;
       let username = req.query.username;
       console.log(username,'ssssssss');
-      res.view('pages/chats', { username });
+      return res.view('pages/chats', { username });
     } catch (error) {
       console.log(error.message);
+      return res.status(404).json({
+        error: error.message,
+        message: 'Page not found',
+      });
     }
   },
 
@@ -95,8 +111,8 @@ module.exports = {
 
       // Render the 'oneChat' view and pass the user parameter
       return res.view('pages/oneChat', { username, userfriend, userfriendDetails });
-    } catch (err) {
-      console.error('Error in oneChatAction:', err);
+    } catch (error) {
+      console.error('Error in oneChatAction:', error);
       return res.serverError('Internal Server Error');
     }
   }

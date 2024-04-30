@@ -51,7 +51,7 @@ pollServer = async () => {
   } catch (error) {
     console.log('Error fetching messages: ', error.message);
   }
-}
+};
 
 module.exports = {
 
@@ -72,12 +72,15 @@ module.exports = {
           // console.log(`error in fetching messages ${error}`);
           return res.serverError('Error fetching messages');
         } else {
-          res.json(result);
+          return res.json(result);
         }
       });
     } catch (error) {
       console.error('Error handling POST request:', error.message);
-      res.status(500).send('Internal Server Error');
+      return res.status(500).json({
+        error: error.message,
+        message: 'Internal server error',
+      });
     }
   },
 
@@ -110,13 +113,17 @@ module.exports = {
             if (error) {
               console.log(`error in fetching messages ${error}`);
             } else {
-              res.json(result);
+              return res.json(result);
             }
           });
         }
       });
     } catch (error) {
-
+      console.error('Error handling POST request:', error.message);
+      return res.status(500).json({
+        error: error.message,
+        message: 'Internal server error',
+      });
     }
   },
 
@@ -131,11 +138,19 @@ module.exports = {
  * */
 
   msgSendAction: async function (req, res) {
-    const username = req.body.username;
-    const message = req.body.newmsg;
-    console.log('msgSendAction => ',username, message);
-    const data = await sendMessage(username, message);
-    return res.redirect(`/chats?username=${username}`);
+    try {
+      const username = req.body.username;
+      const message = req.body.newmsg;
+      console.log('msgSendAction => ',username, message);
+      const data = await sendMessage(username, message);
+      return res.redirect(`/chats?username=${username}`);
+    } catch (error) {
+      console.error('Error handling POST request:', error.message);
+      return res.status(500).json({
+        error: error.message,
+        message: 'Internal server error',
+      });
+    }
   },
 
   /**
@@ -149,8 +164,16 @@ module.exports = {
  * */
 
   pollingAction: async function (req, res) {
-    const data = await pollServer();
-    res.send(data);
+    try {
+      const data = await pollServer();
+      res.send(data);
+    } catch (error) {
+      console.error('Error handling POST request:', error.message);
+      return res.status(500).json({
+        error: error.message,
+        message: 'Internal server error',
+      });
+    }
   },
 
 };

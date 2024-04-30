@@ -31,7 +31,7 @@ oneChatSendMsgMid = async function (username, userfriend, message) {
 
     return OneChatMsgHistory;
   } catch (error) {
-    console.log(`error occured ${error}`);
+    console.log({ error: error.message });
   }
 };
 
@@ -54,7 +54,10 @@ OneChatPollServer = async (data) => {
       // console.log(response.data);
     return response.data;
   } catch (error) {
-    console.error('Error fetching messages:', error);
+    console.log({
+      message: 'Error fetching messages',
+      error: error.message,
+    });
   }
 };
 
@@ -95,8 +98,11 @@ module.exports = {
               }
       );
     } catch (error) {
-      console.log(`error in fetching messages ${err}`);
-      res.status(500).json({ error: 'Internal Server Error' });
+      console.log(`error in fetching messages ${error}`);
+      res.status(500).json({
+        message: 'Internal Server Error',
+        error: error.message,
+      });
     }
   },
 
@@ -125,19 +131,22 @@ module.exports = {
           console.log(`error in sending message ${err}`);
         } else {
           OneChatMessage.find({ sendername, receivername }).exec(
-                  async (err, result) => {
-                    if (err) {
-                      console.log(`error in fetching messages ${error}`);
-                    } else {
-                      res.json(result);
-                    }
-                  }
+            async (err, result) => {
+              if (err) {
+                console.log(`error in fetching messages ${err}`);
+              } else {
+                return res.json(result);
+              }
+            }
           );
         }
       });
     } catch (error) {
-      console.log(`error in sending messages ${err}`);
-      res.status(500).json({ error: 'Internal Server Error' });
+      console.log(`error in sending messages ${error}`);
+      return res.status(500).json({
+        message: 'Internal Server Error',
+        error: error.message,
+      });
     }
   },
 
@@ -158,9 +167,17 @@ module.exports = {
 
     console.log('sending msg');
 
-    const data = await oneChatSendMsgMid(username, userfriend, message);
-    console.log('data is ', data);
-    return res.redirect(`/oneChat?user=${encodeURIComponent(userfriend)}&username=${encodeURIComponent(username)}`);
+    try {
+      const data = await oneChatSendMsgMid(username, userfriend, message);
+      console.log('data is ', data);
+      return res.redirect(`/oneChat?user=${encodeURIComponent(userfriend)}&username=${encodeURIComponent(username)}`);
+    } catch (error) {
+      console.log(`error occured ${error}`);
+      return res.status(500).json({
+        message: 'Something went wrong',
+        error: error.message,
+      });
+    }
   },
 
   /**
@@ -179,10 +196,13 @@ module.exports = {
       const data = req.body;
       // console.log("Data=>", data);
       const result = await OneChatPollServer(data);
-      res.send(result);
+      return res.send(result);
     } catch (error) {
       console.error('Error handling POST request:', error.message);
-      res.status(500).send('Internal Server Error');
+      return res.status(500).json({
+        message: 'Internal Server Error',
+        error: error.message,
+      });
     }
   },
 };

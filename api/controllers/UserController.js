@@ -30,26 +30,26 @@ module.exports = {
     try {
 
       if (!name ||!email ||!password) {
-        return res.badRequest('All fields are required');
+        return res.badRequest({ message: 'All fields are required'} );
       }
       if (password.length < 5) {
-        return res.badRequest('Password must be atleast 5 characters');
+        return res.badRequest({ message: 'Password must be atleast 5 characters' });
       }
       if (password.length > 20) {
-        return res.badRequest('Password must be less than 20 characters');
+        return res.badRequest({ message: 'Password must be less than 20 characters' });
       }
       if (name.length < 3) {
-        return res.badRequest('Username must be atleast 3 characters');
+        return res.badRequest({ message: 'Username must be atleast 3 characters' });
       }
 
       let existingUser = await User.findOne({ email: email });
       let existingUser1 = await User.findOne({ name: name });
 
       if (existingUser) {
-        return res.badRequest('Email already exists');
+        return res.badRequest({ message: 'Email already exists' });
       }
       if (existingUser1) {
-        return res.badRequest('Username already exists');
+        return res.badRequest({ message: 'Username already exists' });
       }
 
       let user = await User.create({
@@ -88,7 +88,10 @@ module.exports = {
       User.find({ email: email }).exec(async (error, users) => {
         if (error) {
           console.log(error.message);
-          return res.status(500).json({ error: 'Error finding user' });
+          return res.status(500).json({
+            message: 'Error finding user',
+            error: error.message,
+          });
         }
         if (users.length < 1) {
           console.log('No user found');
@@ -147,7 +150,7 @@ module.exports = {
       return res.redirect('/');
     } catch (error) {
       console.log('Logout error:', error.message);
-      return res.serverError();
+      return res.serverError({ message: 'Error in logging out' });
     }
 
   },
@@ -171,7 +174,7 @@ module.exports = {
       return res.json(allUserList);
     } catch (error) {
       console.error('Error fetching users:', error);
-      return res.serverError('Error fetching users');
+      return res.serverError({ message: 'Error fetching users' });
     }
   },
 
@@ -192,7 +195,8 @@ module.exports = {
       const currentUsers = result.map(user => user.name);
       return res.json(currentUsers);
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+      return res.serverError({ message: 'Error fetching current users' });
     }
   }
 };
