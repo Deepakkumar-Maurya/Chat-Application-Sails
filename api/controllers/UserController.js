@@ -29,6 +29,7 @@ module.exports = {
 
     try {
 
+      // ** validations
       if (!name ||!email ||!password) {
         return res.badRequest({ message: 'All fields are required'} );
       }
